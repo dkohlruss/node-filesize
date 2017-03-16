@@ -5,18 +5,8 @@ const hbs = require('hbs');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './my-uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
-});
-
-const upload = multer({
-  storage
-});
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage });
 
 app.set('view engine','hbs');
 
@@ -24,15 +14,13 @@ app.get('/', (req, res) => {
   res.render('index.hbs');
 })
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/', upload.single('file'), (req, res) => {
   // req.file is the file file
-  let fileSize = req.file; //req.file.size
+  let fileSize = req.file; //req.file is undefined
   console.log(req.file);
-  console.log(req.body);
+  console.log(req.body); // req.body is also undefined
 
-  res.render('upload.hbs', {
-    fileSize
-  });
+  res.send({fileSize});
 });
 
 app.listen(port, () => {
