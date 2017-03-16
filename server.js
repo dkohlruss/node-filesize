@@ -5,14 +5,9 @@ const hbs = require('hbs');
 const app = express();
 const port = process.env.PORT || 3000;
 
-var storage = multer.memoryStorage();
-var upload = multer({ storage: storage });
+const upload = multer({ dest: 'uploads/' });
 
-app.set('view engine','hbs');
-
-app.get('/', (req, res) => {
-  res.render('index.hbs');
-})
+app.use(express.static(__dirname + '/public'));
 
 app.post('/', upload.single('file'), (req, res) => {
   // req.file is the file file
